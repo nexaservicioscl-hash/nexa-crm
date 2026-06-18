@@ -314,12 +314,14 @@ textarea.fi{resize:vertical}
   <div class="nav-sec">Operaciones</div>
   <div class="nav-item" onclick="nav('instalaciones',this)"><i class="ti ti-tool"></i> Instalaciones</div>
   <div class="nav-item" onclick="nav('reportes',this)"><i class="ti ti-chart-bar"></i> Reportes</div>
+  <div class="nav-item" onclick="nav('finanzas',this)"><i class="ti ti-coin"></i> Finanzas</div>
   <div class="nav-sec">Config.</div>
   <div class="nav-item" onclick="nav('equipo',this)"><i class="ti ti-users-group"></i> Equipo</div>
+  <div class="nav-item" onclick="nav('config',this)"><i class="ti ti-settings"></i> Configuración</div>
   <div class="sb-foot">
     <div class="sb-user">
-      <div class="av av-n" style="width:30px;height:30px;font-size:11px" id="sb-av">VE</div>
-      <div><div class="sb-uname" id="sb-uname">Cargando...</div><div class="sb-urole">Nexa Chile</div></div>
+      <div class="av av-n" style="width:30px;height:30px;font-size:11px" id="sb-av">MV</div>
+      <div><div class="sb-uname" id="sb-uname">Mario Veloso</div><div class="sb-urole">Nexa Chile</div></div>
     </div>
     <button class="sb-logout" onclick="logout()"><i class="ti ti-logout" style="font-size:11px"></i> Cerrar sesión</button>
   </div>
@@ -339,7 +341,7 @@ textarea.fi{resize:vertical}
   </div>
   <div class="content">
     <div class="banner">
-      <h2 id="dash-saludo">Buen día, equipo Nexa ⚡</h2>
+      <h2 id="dash-saludo">Buen día, Mario ⚡</h2>
       <p id="dash-fecha">Cargando...</p>
       <div id="dash-stats"></div>
     </div>
@@ -501,6 +503,102 @@ textarea.fi{resize:vertical}
   <div class="content"><div class="g3" id="equipo-cards"></div></div>
 </div>
 
+<!-- FINANZAS -->
+<div id="page-finanzas" class="page">
+  <div class="topbar">
+    <span class="topbar-title"><i class="ti ti-coin" style="color:var(--orange)"></i> Finanzas</span>
+    <div class="topbar-right">
+      <button class="btn btn-primary" onclick="openModal('m-gasto')"><i class="ti ti-plus"></i> Registrar gasto</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="g4" id="fin-metrics" style="margin-bottom:18px"></div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Flujo de caja — últimos 6 meses</div>
+        <div id="fin-chart"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gastos por categoría</div>
+        <div id="fin-categorias"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">Registro de gastos <span id="fin-total-gastos"></span></div>
+      <table class="tbl"><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Monto</th><th></th></tr></thead>
+      <tbody id="gastos-tbody"></tbody></table>
+      <div id="gastos-empty" class="empty" style="display:none"><i class="ti ti-coin"></i><p>Sin gastos registrados aún.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIGURACION -->
+<div id="page-config" class="page">
+  <div class="topbar">
+    <span class="topbar-title"><i class="ti ti-settings" style="color:var(--orange)"></i> Configuración</span>
+  </div>
+  <div class="content">
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Datos de la empresa</div>
+      <div class="g3">
+        <div class="fg"><label class="fl">Nombre empresa</label><input class="fi" id="cfg-empresa" value="Nexa Chile"/></div>
+        <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="cfg-tel" value="+56 9 6685 2741"/></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="cfg-email" value="nexa.servicios.cl@gmail.com"/></div>
+      </div>
+      <button class="btn btn-primary" onclick="guardarConfigEmpresa()"><i class="ti ti-check"></i> Guardar datos empresa</button>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Parámetros de precios (usados en cotizaciones y cálculo de valor de leads)</div>
+      <div class="g4">
+        <div class="fg"><label class="fl">Mano de obra ($/kWp)</label><input class="fi" id="cfg-manoobra" type="number" value="140000"/></div>
+        <div class="fg"><label class="fl">Inversor ($/kWp)</label><input class="fi" id="cfg-inversor" type="number" value="90000"/></div>
+        <div class="fg"><label class="fl">Estructura ($/panel)</label><input class="fi" id="cfg-estructura" type="number" value="80000"/></div>
+        <div class="fg"><label class="fl">Trámites SEC (flat)</label><input class="fi" id="cfg-sec" type="number" value="250000"/></div>
+      </div>
+      <div class="g3">
+        <div class="fg"><label class="fl">Subsidio SSEE (%)</label><input class="fi" id="cfg-subsidio" type="number" value="8.8"/></div>
+        <div class="fg"><label class="fl">Tarifa Enel RM ($/kWh)</label><input class="fi" id="cfg-kwh" type="number" value="210"/></div>
+        <div class="fg"><label class="fl">Potencia panel (W)</label><input class="fi" id="cfg-panelw" type="number" value="590"/></div>
+      </div>
+      <button class="btn btn-primary" onclick="guardarConfigPrecios()"><i class="ti ti-check"></i> Guardar parámetros</button>
+      <span style="font-size:12px;color:var(--text3);margin-left:10px">Estos valores se guardan localmente en este navegador.</span>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Editar Leads <span style="font-size:12px;color:var(--text3);font-weight:400">(clic en cualquier celda para modificar)</span></div>
+      <div style="overflow-x:auto">
+      <table class="tbl"><thead><tr><th>Nombre</th><th>Comuna</th><th>Etapa</th><th>Valor</th><th>Vendedor</th><th></th></tr></thead>
+      <tbody id="cfg-leads-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Editar Instalaciones</div>
+      <div style="overflow-x:auto">
+      <table class="tbl"><thead><tr><th>Cliente</th><th>Comuna</th><th>Estado</th><th>Vendedor</th><th></th></tr></thead>
+      <tbody id="cfg-inst-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Editar Gastos</div>
+      <div style="overflow-x:auto">
+      <table class="tbl"><thead><tr><th>Descripción</th><th>Categoría</th><th>Monto</th><th></th></tr></thead>
+      <tbody id="cfg-gastos-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <div class="card" style="border:1px solid var(--danger)">
+      <div class="card-title" style="color:var(--danger)">Zona de riesgo</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px">Estas acciones no se pueden deshacer.</p>
+      <button class="btn" style="border-color:var(--danger);color:var(--danger)" onclick="borrarTodosGastos()"><i class="ti ti-trash"></i> Borrar todos los gastos</button>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- /main -->
 </div><!-- /app -->
 
@@ -626,6 +724,41 @@ textarea.fi{resize:vertical}
 </div>
 </div>
 
+<!-- Modal Gasto -->
+<div id="m-gasto" class="overlay" onclick="closeOut(event,'m-gasto')">
+<div class="modal">
+  <div class="modal-hdr"><div class="modal-title">💸 Registrar gasto</div><button class="modal-close" onclick="closeModal('m-gasto')">×</button></div>
+  <div class="g2" style="margin-bottom:0">
+    <div class="fg"><label class="fl">Descripción *</label><input class="fi" id="gf-desc" placeholder="Ej: Compra paneles Longi"/></div>
+    <div class="fg"><label class="fl">Monto (CLP) *</label><input class="fi" id="gf-monto" type="number" placeholder="Ej: 500000"/></div>
+  </div>
+  <div class="g2" style="margin-bottom:0">
+    <div class="fg"><label class="fl">Categoría *</label>
+      <select class="fs" id="gf-cat">
+        <option value="">Selecciona</option>
+        <option>Materiales (paneles)</option>
+        <option>Materiales (inversores)</option>
+        <option>Materiales (estructura)</option>
+        <option>Mano de obra instalación</option>
+        <option>Trámites SEC</option>
+        <option>Transporte</option>
+        <option>Marketing y publicidad</option>
+        <option>Gastos administrativos</option>
+        <option>Herramientas y equipos</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" id="gf-fecha" type="date"/></div>
+  </div>
+  <div class="fg"><label class="fl">Proyecto / Cliente asociado</label><input class="fi" id="gf-proyecto" placeholder="Ej: Instalación Laura Vera (opcional)"/></div>
+  <div class="fg"><label class="fl">Notas</label><textarea class="fi" id="gf-notas" rows="2" placeholder="Observaciones adicionales..."></textarea></div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px">
+    <button class="btn" onclick="closeModal('m-gasto')">Cancelar</button>
+    <button class="btn btn-primary" onclick="guardarGasto()"><i class="ti ti-check"></i> Guardar gasto</button>
+  </div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -726,9 +859,9 @@ async function showApp() {
   document.getElementById('app').style.display = 'flex';
   // Nombre usuario
   const email = currentUser?.email || '';
-  const nombre = email.split('@')[0].replace(/\./g,' ');
-  document.getElementById('sb-uname').textContent = nombre;
-  document.getElementById('sb-av').textContent = initials(nombre||'VE');
+  const nombre = email === 'nexa.servicios.cl@gmail.com' ? 'Mario Veloso' : email.split('@')[0].replace(/\./g,' ');
+  document.getElementById('sb-uname').textContent = nombre || 'Mario Veloso';
+  document.getElementById('sb-av').textContent = initials(nombre||'MV');
   // Cargar datos
   await loadAllData();
   renderDashboard();
@@ -828,6 +961,10 @@ async function dbUpdateInst(id, data) {
   const { error } = await sb.from('instalaciones').update(data).eq('id', id);
   if(error) throw error;
 }
+async function dbDeleteInst(id) {
+  const { error } = await sb.from('instalaciones').delete().eq('id', id);
+  if(error) throw error;
+}
 
 // ============ REALTIME ============
 function setupRealtime() {
@@ -857,7 +994,7 @@ function nav(id, el) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(el) el.classList.add('active');
-  const renders = {dashboard:renderDashboard,pipeline:renderPipeline,leads:renderLeads,cotizaciones:renderCotizaciones,reportes:renderReportes,equipo:renderEquipo,ia:renderInsights};
+  const renders = {dashboard:renderDashboard,pipeline:renderPipeline,leads:renderLeads,cotizaciones:renderCotizaciones,reportes:renderReportes,equipo:renderEquipo,ia:renderInsights,finanzas:renderFinanzas,config:renderConfig};
   if(renders[id]) renders[id]();
   if(id==='instalaciones') renderInstalaciones('todas');
 }
@@ -1405,6 +1542,232 @@ function exportCSV() {
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
   a.download='nexa-leads-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
   toast('CSV exportado ✓','success');
+}
+
+// ============ FINANZAS ============
+let GASTOS = [];
+
+function renderFinanzas() {
+  const cerrados = LEADS.filter(l => l.etapa === 'Cerrado');
+  const ingresos = cerrados.reduce((s, l) => s + (l.valor || 0), 0);
+  const totalGastos = GASTOS.reduce((s, g) => s + (g.monto || 0), 0);
+  const utilidad = ingresos - totalGastos;
+  const margen = ingresos > 0 ? Math.round(utilidad / ingresos * 100) : 0;
+
+  document.getElementById('fin-metrics').innerHTML = `
+    <div class="mc"><div class="mc-l">Ingresos ventas</div><div class="mc-v" style="color:var(--success)">${fmt(ingresos)}</div><div class="mc-s up">${cerrados.length} cierres</div></div>
+    <div class="mc"><div class="mc-l">Total gastos</div><div class="mc-v" style="color:var(--danger)">${fmt(totalGastos)}</div><div class="mc-s">${GASTOS.length} registros</div></div>
+    <div class="mc"><div class="mc-l">Utilidad neta</div><div class="mc-v" style="color:${utilidad>=0?'var(--success)':'var(--danger)'}">${fmt(Math.abs(utilidad))}</div><div class="mc-s ${utilidad>=0?'up':'dn'}">${utilidad>=0?'Ganancia':'Pérdida'}</div></div>
+    <div class="mc"><div class="mc-l">Margen</div><div class="mc-v">${margen}%</div><div class="mc-s">sobre ingresos</div></div>`;
+
+  // Chart flujo de caja
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun'];
+  const baseIngresos = [2900000,2200000,3800000,3300000,3900000,ingresos||4700000];
+  const maxVal = Math.max(...baseIngresos, 1);
+  document.getElementById('fin-chart').innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:8px">
+      ${meses.map((m,i) => `
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;color:var(--text3)">${fmt(baseIngresos[i])}</div>
+          <div style="width:100%;background:${i===5?'var(--orange)':'#C8D9F0'};border-radius:3px 3px 0 0;height:${Math.round(baseIngresos[i]/maxVal*100)}px"></div>
+          <div style="font-size:10px;color:var(--text3)">${m}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // Categorías
+  const cats = {};
+  GASTOS.forEach(g => { cats[g.categoria] = (cats[g.categoria]||0) + g.monto; });
+  const sortedCats = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const maxCat = sortedCats[0]?.[1] || 1;
+  const catColors = ['var(--orange)','var(--navy-l)','var(--success)','#A78BFA','#FB923C','#34D399'];
+  document.getElementById('fin-categorias').innerHTML = sortedCats.length === 0
+    ? '<div style="font-size:13px;color:var(--text3);padding:20px 0;text-align:center">Sin gastos aún</div>'
+    : sortedCats.map(([cat, monto], i) => `
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+            <span>${cat}</span><span style="font-weight:600">${fmt(monto)}</span>
+          </div>
+          <div class="prog" style="height:7px"><div class="prog-f" style="width:${Math.round(monto/maxCat*100)}%;background:${catColors[i%catColors.length]}"></div></div>
+        </div>`).join('');
+
+  // Tabla gastos
+  const tbody = document.getElementById('gastos-tbody');
+  const empty = document.getElementById('gastos-empty');
+  document.getElementById('fin-total-gastos').innerHTML = `<span style="color:var(--danger);font-size:13px">Total: ${fmt(totalGastos)}</span>`;
+  if (!GASTOS.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = [...GASTOS].reverse().map((g,i) => `
+    <tr>
+      <td style="font-size:12px;color:var(--text3)">${g.fecha||'—'}</td>
+      <td style="font-size:13px;font-weight:500">${g.descripcion}</td>
+      <td><span class="badge b-amber">${g.categoria}</span></td>
+      <td style="font-size:13px;font-weight:700;color:var(--danger)">−${fmt(g.monto)}</td>
+      <td><button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="eliminarGasto(${GASTOS.length-1-i})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('');
+}
+
+function guardarGasto() {
+  const desc = document.getElementById('gf-desc').value.trim();
+  const monto = parseInt(document.getElementById('gf-monto').value)||0;
+  const cat = document.getElementById('gf-cat').value;
+  if(!desc||!monto||!cat){toast('Completa los campos obligatorios','error');return;}
+  const hoy = new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'});
+  GASTOS.push({
+    descripcion: desc,
+    monto,
+    categoria: cat,
+    fecha: document.getElementById('gf-fecha').value || hoy,
+    proyecto: document.getElementById('gf-proyecto').value.trim(),
+    notas: document.getElementById('gf-notas').value.trim()
+  });
+  saveGastos();
+  closeModal('m-gasto');
+  ['gf-desc','gf-monto','gf-proyecto','gf-notas'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('gf-cat').value='';
+  toast('Gasto registrado ✓','success');
+  renderFinanzas();
+}
+
+function eliminarGasto(idx) {
+  if(!confirm('¿Eliminar este gasto?')) return;
+  GASTOS.splice(idx,1);
+  saveGastos();
+  renderFinanzas();
+  toast('Gasto eliminado','error');
+}
+
+function saveGastos() {
+  try { localStorage.setItem('nexa_gastos', JSON.stringify(GASTOS)); } catch(e){}
+}
+const GASTOS_SEED_EXCEL = [{"descripcion": "Estructura (NEXA-2025-001)", "monto": 200000.0, "categoria": "Materiales (estructura)", "fecha": "2025-2026", "proyecto": "NEXA-2025-001"}, {"descripcion": "M electrico (NEXA-2025-001)", "monto": 54230.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2025-001"}, {"descripcion": "Estructura (NEXA-2025-001)", "monto": 491470.0, "categoria": "Materiales (estructura)", "fecha": "2025-2026", "proyecto": "NEXA-2025-001"}, {"descripcion": "dia de obra (NEXA-2025-001)", "monto": 70000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2025-001"}, {"descripcion": "ferreteria (NEXA-2025-001)", "monto": 88206.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2025-001"}, {"descripcion": "Almuerzo (NEXA-2026-001)", "monto": 4280.0, "categoria": "Gastos administrativos", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Almuerzo (NEXA-2026-001)", "monto": 10800.0, "categoria": "Gastos administrativos", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Cables (NEXA-2026-001)", "monto": 72009.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Bencina (NEXA-2026-001)", "monto": 20000.0, "categoria": "Gastos administrativos", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "cable solar (NEXA-2026-001)", "monto": 66627.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Cordon (NEXA-2026-001)", "monto": 82826.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Iluminarias (NEXA-2026-001)", "monto": 14830.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Material eléctrico (cables, protecciones, canalización) (NEXA-2026-001)", "monto": 15580.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Anticipo sueldo Mario (Administración 01-2026)", "monto": 50000.0, "categoria": "Gastos administrativos", "fecha": "2025-2026", "proyecto": "Administración 01-2026"}, {"descripcion": "Ferreteria (NEXA-2026-001)", "monto": 76844.0, "categoria": "Materiales (inversores)", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Mario (OP) (NEXA-2025-001)", "monto": 100000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2025-001"}, {"descripcion": "Mario (OP) (NEXA-2025-002)", "monto": 200000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2025-002"}, {"descripcion": "Mario (OP) (General)", "monto": 200000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "General"}, {"descripcion": "Mario (OP) (NEXA-2026-001)", "monto": 200000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-001"}, {"descripcion": "Mario (OP) (NEXA-2026-022)", "monto": 120000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-022"}, {"descripcion": "Mario (OP) (NEXA-2026-004)", "monto": 120000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-004"}, {"descripcion": "Mario (OP) (NEXA-2026-005)", "monto": 120000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-005"}, {"descripcion": "Mario (OP) (NEXA-2026-012)", "monto": 60000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-012"}, {"descripcion": "Mario (OP) (NEXA-2026-012)", "monto": 300000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-012"}, {"descripcion": "Mario (OP) (NEXA-2026-011)", "monto": 120000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-011"}, {"descripcion": "Mario (OP) (NEXA-2026-014)", "monto": 120000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-014"}, {"descripcion": "Mario (OP) (NEXA-2026-021)", "monto": 2000000.0, "categoria": "Mano de obra instalación", "fecha": "2025-2026", "proyecto": "NEXA-2026-021"}];
+// ============ CONFIGURACION ============
+function loadConfigPrecios() {
+  try {
+    const c = localStorage.getItem('nexa_config_precios');
+    return c ? JSON.parse(c) : {manoobra:140000,inversor:90000,estructura:80000,sec:250000,subsidio:8.8,kwh:210,panelw:590};
+  } catch(e){ return {manoobra:140000,inversor:90000,estructura:80000,sec:250000,subsidio:8.8,kwh:210,panelw:590}; }
+}
+
+function guardarConfigPrecios() {
+  const cfg = {
+    manoobra: parseInt(document.getElementById('cfg-manoobra').value)||140000,
+    inversor: parseInt(document.getElementById('cfg-inversor').value)||90000,
+    estructura: parseInt(document.getElementById('cfg-estructura').value)||80000,
+    sec: parseInt(document.getElementById('cfg-sec').value)||250000,
+    subsidio: parseFloat(document.getElementById('cfg-subsidio').value)||8.8,
+    kwh: parseInt(document.getElementById('cfg-kwh').value)||210,
+    panelw: parseInt(document.getElementById('cfg-panelw').value)||590
+  };
+  try { localStorage.setItem('nexa_config_precios', JSON.stringify(cfg)); } catch(e){}
+  toast('Parámetros de precio guardados ✓','success');
+}
+
+function guardarConfigEmpresa() {
+  const cfg = {
+    empresa: document.getElementById('cfg-empresa').value,
+    tel: document.getElementById('cfg-tel').value,
+    email: document.getElementById('cfg-email').value
+  };
+  try { localStorage.setItem('nexa_config_empresa', JSON.stringify(cfg)); } catch(e){}
+  toast('Datos de empresa guardados ✓','success');
+}
+
+function renderConfig() {
+  // Cargar valores guardados
+  const p = loadConfigPrecios();
+  ['manoobra','inversor','estructura','sec','subsidio','kwh','panelw'].forEach(k=>{
+    const el = document.getElementById('cfg-'+k); if(el) el.value = p[k];
+  });
+  try {
+    const e = JSON.parse(localStorage.getItem('nexa_config_empresa')||'{}');
+    if(e.empresa) document.getElementById('cfg-empresa').value = e.empresa;
+    if(e.tel) document.getElementById('cfg-tel').value = e.tel;
+    if(e.email) document.getElementById('cfg-email').value = e.email;
+  } catch(err){}
+
+  // Tabla editable de Leads
+  const lt = document.getElementById('cfg-leads-tbody');
+  lt.innerHTML = LEADS.map((l,i) => `
+    <tr>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${l.nombre||''}" onchange="cfgEditLead(${i},'nombre',this.value)"/></td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${l.comuna||''}" onchange="cfgEditLead(${i},'comuna',this.value)"/></td>
+      <td>
+        <select class="fs" style="padding:6px 8px;font-size:12.5px" onchange="cfgEditLead(${i},'etapa',this.value)">
+          ${['Nuevo','Visita técnica','Cotizando','Cerrado','Perdido'].map(e=>`<option ${l.etapa===e?'selected':''}>${e}</option>`).join('')}
+        </select>
+      </td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" type="number" value="${l.valor||0}" onchange="cfgEditLead(${i},'valor',parseInt(this.value)||0)"/></td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${l.vendedor||''}" onchange="cfgEditLead(${i},'vendedor',this.value)"/></td>
+      <td><button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="cfgDeleteLead(${i})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Sin leads.</td></tr>';
+
+  // Tabla editable de Instalaciones
+  const it = document.getElementById('cfg-inst-tbody');
+  it.innerHTML = INSTALACIONES.map((p,i) => `
+    <tr>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${p.cliente||''}" onchange="cfgEditInst(${i},'cliente',this.value)"/></td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${p.comuna||''}" onchange="cfgEditInst(${i},'comuna',this.value)"/></td>
+      <td>
+        <select class="fs" style="padding:6px 8px;font-size:12.5px" onchange="cfgEditInst(${i},'estado',this.value)">
+          ${['En proceso','Completado','Pausado'].map(e=>`<option ${p.estado===e?'selected':''}>${e}</option>`).join('')}
+        </select>
+      </td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${p.vendedor||''}" onchange="cfgEditInst(${i},'vendedor',this.value)"/></td>
+      <td><button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="cfgDeleteInst(${i})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px">Sin instalaciones.</td></tr>';
+
+  // Tabla editable de Gastos
+  const gt = document.getElementById('cfg-gastos-tbody');
+  gt.innerHTML = GASTOS.map((g,i) => `
+    <tr>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${g.descripcion||''}" onchange="cfgEditGasto(${i},'descripcion',this.value)"/></td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" value="${g.categoria||''}" onchange="cfgEditGasto(${i},'categoria',this.value)"/></td>
+      <td><input class="fi" style="padding:6px 8px;font-size:12.5px" type="number" value="${g.monto||0}" onchange="cfgEditGasto(${i},'monto',parseInt(this.value)||0)"/></td>
+      <td><button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="cfgDeleteGasto(${i})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:20px">Sin gastos.</td></tr>';
+}
+
+function cfgEditLead(i, field, val) {
+  LEADS[i][field]=val;
+  if(LEADS[i].id) dbUpdateLead(LEADS[i].id, {[field]:val}).catch(e=>console.error(e));
+  toast('Lead actualizado ✓','success');
+}
+function cfgDeleteLead(i) {
+  if(!confirm('¿Eliminar este lead?'))return;
+  const l=LEADS[i];
+  if(l.id) dbDeleteLead(l.id).catch(e=>console.error(e));
+  LEADS.splice(i,1); renderConfig(); toast('Lead eliminado','error');
+}
+
+function cfgEditInst(i, field, val) {
+  INSTALACIONES[i][field]=val;
+  if(INSTALACIONES[i].id) dbUpdateInst(INSTALACIONES[i].id, {[field]:val}).catch(e=>console.error(e));
+  toast('Instalación actualizada ✓','success');
+}
+function cfgDeleteInst(i) {
+  if(!confirm('¿Eliminar esta instalación?'))return;
+  const p=INSTALACIONES[i];
+  if(p.id) dbDeleteInst(p.id).catch(e=>console.error(e));
+  INSTALACIONES.splice(i,1); renderConfig(); toast('Instalación eliminada','error');
+}
+
+function cfgEditGasto(i, field, val) { GASTOS[i][field]=val; saveGastos(); toast('Gasto actualizado ✓','success'); }
+function cfgDeleteGasto(i) { if(!confirm('¿Eliminar este gasto?'))return; GASTOS.splice(i,1); saveGastos(); renderConfig(); toast('Gasto eliminado','error'); }
+
+function borrarTodosGastos() {
+  if(!confirm('¿Seguro? Esto borrará TODOS los gastos registrados y no se puede deshacer.')) return;
+  GASTOS = [];
+  saveGastos();
+  renderConfig();
+  toast('Todos los gastos fueron eliminados','error');
+}
+
+function loadGastos() {
+  try {
+    const g=localStorage.getItem('nexa_gastos');
+    if(g) { GASTOS=JSON.parse(g); }
+    else { GASTOS=[...GASTOS_SEED_EXCEL]; saveGastos(); }
+  } catch(e){}
 }
 
 // ============ INIT ============
